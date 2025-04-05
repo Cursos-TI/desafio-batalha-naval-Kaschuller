@@ -1,0 +1,82 @@
+#include <stdio.h>
+
+#define TAM 10
+#define NAVIO 3
+
+// Verifica se é possível posicionar o navio sem ultrapassar limites ou sobrepor
+int pode_posicionar(int tabuleiro[TAM][TAM], int linha, int coluna, int direcao, int diagonal) {
+    for (int i = 0; i < NAVIO; i++) {
+        int l = linha, c = coluna;
+
+        if (diagonal == 1) {       // Diagonal principal (↘)
+            l += i;
+            c += i;
+        } else if (diagonal == 2) { // Diagonal secundária (↙)
+            l += i;
+            c -= i;
+        } else if (direcao == 0) { // Horizontal →
+            c += i;
+        } else {                   // Vertical ↓
+            l += i;
+        }
+
+        // Validação de limites e sobreposição
+        if (l < 0 || l >= TAM || c < 0 || c >= TAM || tabuleiro[l][c] == NAVIO)
+            return 0;
+    }
+    return 1;
+}
+
+// Posiciona o navio no tabuleiro
+void posicionar_navio(int tabuleiro[TAM][TAM], int linha, int coluna, int direcao, int diagonal) {
+    for (int i = 0; i < NAVIO; i++) {
+        int l = linha, c = coluna;
+
+        if (diagonal == 1) {
+            l += i;
+            c += i;
+        } else if (diagonal == 2) {
+            l += i;
+            c -= i;
+        } else if (direcao == 0) {
+            c += i;
+        } else {
+            l += i;
+        }
+
+        tabuleiro[l][c] = NAVIO;
+    }
+}
+
+// Imprime o tabuleiro no console
+void imprimir_tabuleiro(int tabuleiro[TAM][TAM]) {
+    printf("Tabuleiro:\n");
+    for (int i = 0; i < TAM; i++) {
+        for (int j = 0; j < TAM; j++) {
+            printf("%d ", tabuleiro[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int tabuleiro[TAM][TAM] = {0};
+
+    // Navios horizontais e verticais
+    if (pode_posicionar(tabuleiro, 0, 0, 0, 0))
+        posicionar_navio(tabuleiro, 0, 0, 0, 0); // Horizontal em (0,0)
+
+    if (pode_posicionar(tabuleiro, 2, 5, 1, 0))
+        posicionar_navio(tabuleiro, 2, 5, 1, 0); // Vertical em (2,5)
+
+    // Navios diagonais
+    if (pode_posicionar(tabuleiro, 4, 4, 0, 1))
+        posicionar_navio(tabuleiro, 4, 4, 0, 1); // Diagonal principal em (4,4)
+
+    if (pode_posicionar(tabuleiro, 5, 8, 0, 2))
+        posicionar_navio(tabuleiro, 5, 8, 0, 2); // Diagonal secundária em (5,8)
+
+    imprimir_tabuleiro(tabuleiro);
+
+    return 0;
+}
